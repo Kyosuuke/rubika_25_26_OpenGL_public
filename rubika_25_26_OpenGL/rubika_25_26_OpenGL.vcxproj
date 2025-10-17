@@ -135,18 +135,26 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="TempShader.cpp" />
+    <ClCompile Include="TempThreshold.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Threshold.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="TempShader.h" />
+    <ClInclude Include="TempThreshold.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Threshold.h" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Ressources\FragmentShader.glsl" />
+    <Content Include="Ressources\FS.glsl" />
+    <Content Include="Ressources\TempFS.glsl" />
+    <Content Include="Ressources\TempVS.glsl" />
     <Content Include="Ressources\VertexShader.glsl" />
+    <Content Include="Ressources\VS.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

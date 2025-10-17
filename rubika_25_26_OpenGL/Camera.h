@@ -25,6 +25,10 @@ public:
     void ProcessKeyboard(Direction direction, float deltaTime);
     void ProcessMouse(float xoffset, float yoffset);
     void ProcessMouseScroll(float yoffset);
+    
+    float GetCameraSpeed() {return MovementSpeed;}
+    float GetFov() {return Fov;}
+    glm::vec3 GetPosition() {return Position;}
 
 private:
     // Compute the Front and Right vector using the euler angles

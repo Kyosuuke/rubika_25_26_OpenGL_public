@@ -5,9 +5,14 @@
 #define SCR_WIDTH 800
 #define SCR_HEIGHT 600
 
-#ifndef THRESHOLD
+/*#ifndef THRESHOLD
 #include "Threshold.h"
 using namespace threshold;
+#endif*/
+
+#ifndef THRESHOLD1
+#include "TempThreshold.h"
+using namespace TempThreshold;
 #endif
 
 #include <iostream>
@@ -46,13 +51,21 @@ int main()
 
     init();
 
+    float lastFrame = 0.0f;
+    
     while (!glfwWindowShouldClose(window))
     {
+        float currentFrame = (float)glfwGetTime();
+        float deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
+        
         processInput(window);
 
+        ProcessKeyboardInput(deltaTime);
+        
         update();
 
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClearColor(0.f, 0.f, 0.f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
         draw();
@@ -81,10 +94,10 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
-
+    ProcessMouse(xpos, ypos);
 }
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
-
+    ProcessScroll(xoffset, yoffset);
 }

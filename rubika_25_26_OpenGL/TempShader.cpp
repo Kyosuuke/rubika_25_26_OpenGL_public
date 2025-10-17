@@ -1,17 +1,14 @@
-﻿#include "Shader.h"
+﻿#include "TempShader.h"
 
 #include <iosfwd>
 #include <GLFW/glfw3.h>
 
-Shader::Shader()
+TempShader::~TempShader()
 {
 }
 
-Shader::~Shader()
-{
-}
 
-bool Shader::InitShader(const char* vertexPath, const char* fragmentPath)
+bool TempShader::InitShader(const char* vertexPath, const char* fragmentPath)
 {
     std::string vertexCode;
     std::string fragmentCode;
@@ -84,17 +81,27 @@ bool Shader::InitShader(const char* vertexPath, const char* fragmentPath)
     return true;
 }
 
-void Shader::SetInt(const std::string& name, int value) const
+void TempShader::SetInt(const std::string& name, int value) const
 {
     glUniform1i(glGetUniformLocation(programID, name.c_str()), value);
 }
 
-void Shader::SetFloat(const std::string& name, float value) const
+void TempShader::SetFloat(const std::string& name, float value) const
 {
     glUniform1f(glGetUniformLocation(programID, name.c_str()), value);
 }
 
-void Shader::SetMatrix(const std::string& name, const glm::mat4& mat) const
+void TempShader::SetVec3(const std::string& name, const glm::vec3& value) const
+{
+    if (glGetUniformLocation(programID,  name.c_str()) == -1)
+    {
+        std::cout << "Warning: uniform '" << name << "' doesn't exist!" << std::endl;
+    }
+    
+    glUniform3f(glGetUniformLocation(programID,  name.c_str()), value.x, value.y, value.z);
+}
+
+void TempShader::SetMatrix(const std::string& name, const glm::mat4& mat) const
 {
     GLint loc = glGetUniformLocation(programID, name.c_str());
     if (loc != -1)
@@ -103,7 +110,7 @@ void Shader::SetMatrix(const std::string& name, const glm::mat4& mat) const
     }
 }
 
-void Shader::Use()
+void TempShader::Use()
 {
     glUseProgram(programID);
 }

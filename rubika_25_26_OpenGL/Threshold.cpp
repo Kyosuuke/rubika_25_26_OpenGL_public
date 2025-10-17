@@ -7,6 +7,8 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include "Camera.h"
+
 struct Vertex
 {
 	float position[3];
@@ -101,6 +103,11 @@ namespace threshold
 
 	Texture texture1 = Texture();
 	Texture texture2 = Texture();
+
+	static Camera camera = Camera();
+	static bool firstMouse = true;
+	static double lastX = 400.0;
+	static double lastY = 300.0;
 	
 	void init()
 	{
@@ -143,8 +150,8 @@ namespace threshold
 		texture1.Use(&shader, 0);
 		texture2.Use(&shader, 1);
 		
-		glm::mat4 view = glm::mat4(1.0f);
-		glm::mat4 projection = glm::mat4(1.0f);
+		glm::mat4 view = camera.GetMatrix();
+		glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)800 / 600, 0.1f, 100.0f);
 
 		projection = glm::perspective(glm::radians(45.0f), (float)800 / 600, 0.1f, 100.0f);
 		view = glm::translate(view, glm::vec3(0.0f, 0.0f, -5.0f));
@@ -174,5 +181,41 @@ namespace threshold
 		glDeleteBuffers(1, &VBO);
 		glDeleteVertexArrays(1, &VAO);
 		glDeleteProgram(shaderProgram);
+	}
+
+	void ProcessMouse(double xpos, double ypos)
+	{
+		if (firstMouse)
+		{
+			lastX = xpos;
+			lastY = ypos;
+			firstMouse = false;
+			return;
+		}
+
+		float xoffset = static_cast<float>(xpos - lastX);
+		float yoffset = static_cast<float>(lastY - ypos); // reversed: y ranges bottom->top
+
+		lastX = xpos;
+		lastY = ypos;
+
+		camera.ProcessMouse(xoffset, yoffset);
+	}
+
+	void ProcessScroll(double xoffset, double yoffset)
+	{
+		camera.ProcessMouseScroll(static_cast<float>(yoffset));
+	}
+
+	void ProcessKeyboardInput(float deltaTime)
+	{
+		if (glfwGetKey(glfwGetCurrentContext(), GLFW_KEY_W) == GLFW_PRESS)
+			camera.ProcessKeyboard(Camera::Direction::Forward, deltaTime * camera.GetCameraSpeed());
+		if (glfwGetKey(glfwGetCurrentContext(), GLFW_KEY_S) == GLFW_PRESS)
+			camera.ProcessKeyboard(Camera::Direction::Backward, deltaTime * camera.GetCameraSpeed());
+		if (glfwGetKey(glfwGetCurrentContext(), GLFW_KEY_A) == GLFW_PRESS)
+			camera.ProcessKeyboard(Camera::Direction::Left, deltaTime * camera.GetCameraSpeed());
+		if (glfwGetKey(glfwGetCurrentContext(), GLFW_KEY_D) == GLFW_PRESS)
+			camera.ProcessKeyboard(Camera::Direction::Right, deltaTime * camera.GetCameraSpeed());
 	}
 }
