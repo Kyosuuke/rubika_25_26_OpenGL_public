@@ -1,6 +1,7 @@
 ﻿#include "Shader.h"
 
 #include <iosfwd>
+#include <GLFW/glfw3.h>
 
 Shader::Shader()
 {
@@ -90,8 +91,18 @@ void Shader::SetInt(const std::string& name, int value) const
 
 void Shader::SetFloat(const std::string& name, float value) const
 {
-    glUniform1ui(glGetUniformLocation(programID, name.c_str()), value);
+    glUniform1f(glGetUniformLocation(programID, name.c_str()), value);
 }
+
+void Shader::SetMatrix(const std::string& name, const glm::mat4& mat) const
+{
+    GLint loc = glGetUniformLocation(programID, name.c_str());
+    if (loc != -1)
+    {
+        glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(mat));
+    }
+}
+
 
 void Shader::Use()
 {
