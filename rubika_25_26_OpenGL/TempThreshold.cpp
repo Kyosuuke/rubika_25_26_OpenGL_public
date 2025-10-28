@@ -138,13 +138,25 @@ namespace TempThreshold
 		// Light cube
 		
 		lightShader.Use();
-		
-		float ambientIntensity = 0.2f + 0.1f * sinf((float)glfwGetTime());
-		lightShader.SetVec3("objectColor", glm::vec3(1.0f, 0.5f, 0.31f));
-		lightShader.SetVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
-		lightShader.SetFloat("ambientStrength", ambientIntensity);
 		lightShader.SetVec3("lightPos", lightPos);
 		lightShader.SetVec3("viewPos", camera.GetPosition());
+
+		glm::vec3 lightColor;
+		lightColor.x = static_cast<float>(sin(glfwGetTime()) * 2.0);
+		lightColor.y = static_cast<float>(sin(glfwGetTime() * 0.7));
+		lightColor.z = static_cast<float>(sin(glfwGetTime() * 1.3));
+
+		glm::vec3 diffuseColor = lightColor * glm::vec3(0.5f);
+		glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f);
+		
+		lightShader.SetVec3("light.ambient", ambientColor);
+		lightShader.SetVec3("light.diffuse", diffuseColor);
+		lightShader.SetVec3("light.specular", glm::vec3(1.0f, 1.0f, 1.0f));
+
+		lightShader.SetVec3("material.ambient", glm::vec3(0.0215f, 0.1745f, 0.0215f));
+		lightShader.SetVec3("material.diffuse", glm::vec3(0.07568f, 0.61424f, 0.07568f));
+		lightShader.SetVec3("material.specular", glm::vec3(0.633f, 0.727811f, 0.063f));
+		lightShader.SetFloat("material.shininess", 0.6f);
 
 		glm::mat4 projection = glm::perspective(glm::radians(camera.GetFov()), (float)800 / 600, 0.1f, 100.0f);
 		glm::mat4 view = camera.GetMatrix();
